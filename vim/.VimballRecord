@@ -1,1 +1,2 @@
 snippy_plugin.vba: call delete('/Users/jferris/.vim/plugin/snippetsEmu.vim')|call delete('/Users/jferris/.vim/doc/snippets_emu.txt')
+markdown-1.2.2.vba: call delete('/Users/josh/.vim/ftdetect/markdown.vim')|call delete('/Users/josh/.vim/snippets/markdown.snippets')|call delete('/Users/josh/.vim/syntax/markdown.vim')
