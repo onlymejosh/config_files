@@ -7,6 +7,8 @@
     st = status
     ci = commit
     co = checkout
-    ammend = commit --amend
     di = diff
     aa = add --all
+
+[mergetool]
+	keepBackup = true
