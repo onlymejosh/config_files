@@ -35,3 +35,6 @@ source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
 export PATH=/Users/josh/.rvm/gems/ruby-1.9.3-p125/bin:/Users/josh/.rvm/gems/ruby-1.9.3-p125@global/bin:/Users/josh/.rvm/rubies/ruby-1.9.3-p125/bin:/Users/josh/.rvm/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/usr/X11/bin
+
+# RVM
+[[ -s '/Users/josh/.rvm/scripts/rvm' ]] & source '/Users/josh/.rvm/scripts/rvm'
