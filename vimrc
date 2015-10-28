@@ -26,9 +26,8 @@ set ignorecase smartcase
 set cursorline
 set cmdheight=2
 set switchbuf=useopen
-set numberwidth=5
-" set line numbers
 set number
+set numberwidth=5
 set showtabline=2
 set winwidth=79
 " This makes RVM work inside Vim. I have no idea why.
@@ -59,6 +58,11 @@ set wildmode=longest,list
 set wildmenu
 let mapleader=","
 
+let g:CommandTFileScanner='watchman'
+let g:CommandTMaxFiles = 500000
+let g:CommandTMaxHeight = 30
+let g:CommandTInputDebounce = 200
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " CUSTOM AUTOCMDS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -66,6 +70,7 @@ augroup vimrcEx
   " Clear all autocmds in the group
   autocmd!
   autocmd FileType text setlocal textwidth=78
+  autocmd FileType gitcommit setlocal spell textwidth=78
   " Jump to last cursor position unless it's invalid or in an event handler
   autocmd BufReadPost *
     \ if line("'\"") > 0 && line("'\"") <= line("$") |
@@ -76,7 +81,7 @@ augroup vimrcEx
   autocmd FileType ruby,haml,eruby,yaml,html,javascript,sass,cucumber set ai sw=2 sts=2 et
   autocmd FileType python set sw=4 sts=4 et
 
-  autocmd! BufRead,BufNewFile *.sass setfiletype sass 
+  autocmd! BufRead,BufNewFile *.sass setfiletype sass
 
   autocmd BufRead *.mkd  set ai formatoptions=tcroqn2 comments=n:&gt;
   autocmd BufRead *.markdown  set ai formatoptions=tcroqn2 comments=n:&gt;
@@ -100,7 +105,6 @@ augroup END
 " :set background=dark
 " :color grb256
 colorscheme railscasts
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " STATUS LINE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -120,10 +124,10 @@ imap <c-l> <space>=><space>
 " Can't be bothered to understand ESC vs <c-c> in insert mode
 imap <c-c> <esc>
 " Clear the search buffer when hitting return
-function! MapCR()
-  nnoremap <cr> :nohlsearch<cr>
-endfunction
-call MapCR()
+" function! MapCR()
+"   nnoremap <cr> :nohlsearch<cr>
+" endfunction
+" call MapCR()
 nnoremap <leader><leader> <c-^>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -142,12 +146,11 @@ inoremap <tab> <c-r>=InsertTabWrapper()<cr>
 inoremap <s-tab> <c-n>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" ARROW KEYS ARE UNACCEPTABLE
+" MOUSE LOVE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-map <Left> <Nop>
-map <Right> <Nop>
-map <Up> <Nop>
-map <Down> <Nop>
+if has("mouse")
+  set mouse=a
+endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " OPEN FILES IN DIRECTORY OF CURRENT FILE
@@ -170,23 +173,13 @@ function! RenameFile()
 endfunction
 map <leader>n :call RenameFile()<cr>
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" PROMOTE VARIABLE TO RSPEC LET
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! PromoteToLet()
-  :normal! dd
-  " :exec '?^\s*it\>'
-  :normal! P
-  :.s/\(\w\+\) = \(.*\)$/let(:\1) { \2 }/
-  :normal ==
-endfunction
-:command! PromoteToLet :call PromoteToLet()
-:map <leader>p :PromoteToLet<cr>
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" MAPS TO JUMP TO SPECIFIC COMMAND-T TARGETS AND FILES
+" MAPS TO JUMP TO SPECIFIC COMMAND-T TARGETS AND FILES WITH SETTINGS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+set wildignore+=node_modules/*,bower_components/*
+
 map <leader>gr :topleft :split config/routes.rb<cr>
 function! ShowRoutes()
   " Requires 'scratch' plugin
@@ -196,7 +189,7 @@ function! ShowRoutes()
   " Delete everything
   :normal 1GdG
   " Put routes output in buffer
-  :0r! rake -s routes
+  :0r! bundle exec rake -s routes
   " Size window to number of lines (1 plus rake output length)
   :exec ":normal " . line("$") . "_ "
   " Move cursor to bottom
@@ -210,10 +203,8 @@ map <leader>gc :CommandTFlush<cr>\|:CommandT app/controllers<cr>
 map <leader>gm :CommandTFlush<cr>\|:CommandT app/models<cr>
 map <leader>gh :CommandTFlush<cr>\|:CommandT app/helpers<cr>
 map <leader>gl :CommandTFlush<cr>\|:CommandT lib<cr>
-" stylesheets and javascripts
-map <leader>gs :CommandTFlush<cr>\|:CommandT app/assets/stylesheets<cr>
-map <leader>gj :CommandTFlush<cr>\|:CommandT app/assets/javascripts<cr>
-
+map <leader>gp :CommandTFlush<cr>\|:CommandT public<cr>
+map <leader>gs :CommandTFlush<cr>\|:CommandT public/stylesheets/sass<cr>
 map <leader>gf :CommandTFlush<cr>\|:CommandT features<cr>
 map <leader>gg :topleft 100 :split Gemfile<cr>
 map <leader>gt :CommandTFlush<cr>\|:CommandTTag<cr>
@@ -232,7 +223,7 @@ function! AlternateForCurrentFile()
   let new_file = current_file
   let in_spec = match(current_file, '^spec/') != -1
   let going_to_spec = !in_spec
-  let in_app = match(current_file, '\<controllers\>') != -1 || match(current_file, '\<models\>') != -1 || match(current_file, '\<views\>') || match(current_file, '\<helpers\>') != -1
+  let in_app = match(current_file, '\<controllers\>') != -1 || match(current_file, '\<models\>') != -1 || match(current_file, '\<views\>') != -1 || match(current_file, '\<helpers\>') != -1
   if going_to_spec
     if in_app
       let new_file = substitute(new_file, '^app/', '', '')
@@ -301,7 +292,7 @@ function! RunTests(filename)
         if filereadable("script/test")
             exec ":!script/test " . a:filename
         elseif filereadable("Gemfile")
-            exec ":!bundle exec rspec --color " . a:filename
+            exec ":!bundle exec rspec --color -fd " . a:filename
         else
             exec ":!rspec --color " . a:filename
         end
@@ -324,14 +315,15 @@ endfunction
 command! OpenChangedFiles :call OpenChangedFiles()
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" InsertTime COMMAND
-" Insert the current time
+" Go Lovelyness
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-command! InsertTime :normal a<c-r>=strftime('%F %H:%M:%S.0 %z')<cr>
+au FileType go nmap <leader>r <Plug>(go-run)
+au FileType go nmap <leader>b <Plug>(go-build)
+au FileType go nmap <leader>t <Plug>(go-test)
+au FileType go nmap <leader>c <Plug>(go-coverage)
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" pathogen
+" NerdTree
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-call pathogen#infect()
-call pathogen#helptags()
-" call pathogen#runtime_append_all_bundles()
+map <C-n> :NerdTreeToggle<CR>
+

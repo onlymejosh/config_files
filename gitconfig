@@ -1,6 +1,6 @@
 [user]
-    name = Josh Crowder
-    email = josh@seriousfox.co.uk
+	name = Josh Crowder
+	email = josh.crowder@crowdstrike.com
 [diff]
 [color]
     ui = auto
@@ -45,3 +45,16 @@
 
 [merge]
     tool = vimdiff
+[core]
+	excludesfile = /Users/josh/.gitignore
+	editor = /usr/bin/vim
+[push]
+	default = current
+[pull]
+  rebase = true
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true

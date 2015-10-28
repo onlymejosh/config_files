@@ -1,6 +1,6 @@
 # Edit commands in Vi mode
-set editing-mode vi
-set keymap vi
+# set editing-mode vi
+# set keymap vi
 
 # iTerm key binding
 "\e[1;9D": backward-word
