@@ -2,5 +2,5 @@
 .*.swp
 tags
 .swo
-jferris-*.gemspec
 *.scratch.*
+*.sublime-*

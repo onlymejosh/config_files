@@ -58,11 +58,12 @@ set wildmode=longest,list
 set wildmenu
 let mapleader=","
 
-let g:CommandTFileScanner='watchman'
-let g:CommandTMaxFiles = 500000
-let g:CommandTMaxHeight = 30
-let g:CommandTInputDebounce = 200
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Commmand+T
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:CommandTTraverseSCM="pwd"
+let g:CommandTWildIgnore=&wildignore . ",**/bower_components/*,**/node_modules/*,**/dist/*,**/tmp/*"
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " CUSTOM AUTOCMDS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -101,10 +102,11 @@ augroup END
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COLOR
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-:set t_Co=256 " 256 colors
-" :set background=dark
-" :color grb256
-colorscheme railscasts
+"let base16colorspace=256 " Access colors present in 256 colorspace
+"set t_Co=256 " 256 color mode
+set background=dark
+colorscheme base16-default
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " STATUS LINE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -325,5 +327,8 @@ au FileType go nmap <leader>c <Plug>(go-coverage)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " NerdTree
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-map <C-n> :NerdTreeToggle<CR>
+map <C-n> :NERDTreeToggle<CR>
+autocmd VimEnter * NERDTree
+autocmd VimEnter * wincmd p
 
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
