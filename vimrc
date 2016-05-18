@@ -41,6 +41,7 @@ Plugin 'vim-scripts/JSON.vim'
 Plugin 'vim-scripts/ag.vim'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'scrooloose/nerdtree'
+Plugin 'vim-airline/vim-airline'
 
 call vundle#end()
 filetype plugin indent on
@@ -90,7 +91,7 @@ set backspace=indent,eol,start
 filetype plugin indent on
 
 " Color
-color jgw256
+color joshcrowder
 
 " Directories for swp files
 set backupdir=~/.vim/backup
@@ -156,3 +157,8 @@ nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
 nnoremap <c-l> <c-w>l
+
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#fnamemod = ':.'
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline#extensions#tabline#fnamecollapse = 0
