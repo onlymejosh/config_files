@@ -58,3 +58,7 @@
 [mergetool "sourcetree"]
 	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
+[http "https://git.demo.localflynn.com"]
+	sslCAInfo = /Users/josh/.flynn/ca-certs/default.pem
+[credential "https://git.demo.localflynn.com"]
+	helper = /usr/local/bin/flynn git-credentials

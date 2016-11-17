@@ -42,6 +42,12 @@ Plugin 'vim-scripts/ag.vim'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'scrooloose/nerdtree'
 Plugin 'vim-airline/vim-airline'
+Plugin 'airblade/vim-rooter'
+
+Plugin 'tpope/vim-dispatch'
+Plugin 'JarrodCTaylor/vim-ember-cli-test-runner'
+Plugin 'jiangmiao/auto-pairs'
+Plugin 'danhart/flatlandia'
 
 call vundle#end()
 filetype plugin indent on
@@ -59,6 +65,8 @@ set number
 set ruler
 set nofoldenable
 set nospell
+" set showtabline=2
+set guioptions=e
 
 set encoding=utf-8
 
@@ -91,11 +99,23 @@ set backspace=indent,eol,start
 filetype plugin indent on
 
 " Color
-color joshcrowder
+set background=dark
+colorscheme flatlandia
 
 " Directories for swp files
 set backupdir=~/.vim/backup
 set directory=~/.vim/backup
+
+"Rooter for change on tabs
+autocmd BufEnter *.rb,*.html,*.py,*.json,*.css,*.json,*.js,Rakefile,*.ru :Rooter
+autocmd TabEnter *.rb,*.html,*.py,*.json,*.css,*.json,*.js,Rakefile,*.ru :Rooter
+
+
+nmap <LEADER>d :NERDTreeToggle<CR>
+let NERDSpaceDelims=1
+let NERDTreeShowHidden=1
+let NERDTreeIgnore=['\.pyc$','\.DS_Store$','dist']
+
 
 " Turn off jslint errors by default
 let g:JSLintHighlightErrorLine = 0
@@ -123,9 +143,9 @@ set clipboard=unnamed
 nmap <buffer> <Leader>xx <Plug>(xmpfilter-run)
 nmap <buffer> <Leader>xc <Plug>(xmpfilter-mark)
 
-" vimrc.local
-if filereadable(expand("~/.vimrc.local"))
-  source ~/.vimrc.local
+" Automatically source the config file on save.
+if has("autocmd")
+  autocmd BufWritePost .vimrc source $MYVIMRC
 endif
 
 " ctrl-p
