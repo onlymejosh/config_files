@@ -62,3 +62,5 @@
 	sslCAInfo = /Users/josh/.flynn/ca-certs/default.pem
 [credential "https://git.demo.localflynn.com"]
 	helper = /usr/local/bin/flynn git-credentials
+[commit]
+	template = /Users/josh/.stCommitMsg
